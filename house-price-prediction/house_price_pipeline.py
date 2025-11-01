@@ -1,9 +1,4 @@
-"""House Price Prediction (toy demo)
-Run: python house_price_pipeline.py
-"""
-import os
-import pandas as pd
-import joblib
+import os, joblib, pandas as pd
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
@@ -16,13 +11,13 @@ from sklearn.metrics import mean_squared_error, r2_score
 
 def create_sample_df():
     data = [
-        [1,8450,7,2003,1710,"CollgCr",208500],
-        [2,9600,6,1976,1262,"Veenker",181500],
-        [3,11250,7,2001,1786,"CollgCr",223500],
-        [4,9550,7,1915,1717,"NAmes",140000],
-        [5,14260,8,2000,2198,"CollgCr",250000],
+        [1,8450,7,2003,1710,'CollgCr',208500],
+        [2,9600,6,1976,1262,'Veenker',181500],
+        [3,11250,7,2001,1786,'CollgCr',223500],
+        [4,9550,7,1915,1717,'NAmes',140000],
+        [5,14260,8,2000,2198,'CollgCr',250000],
     ]
-    cols = ["Id","LotArea","OverallQual","YearBuilt","GrLivArea","Neighborhood","SalePrice"]
+    cols = ['Id','LotArea','OverallQual','YearBuilt','GrLivArea','Neighborhood','SalePrice']
     return pd.DataFrame(data, columns=cols)
 
 def prepare_features(df):
@@ -43,8 +38,8 @@ def build_preprocessor(X):
 def train_models(X_train, y_train, X_test, y_test):
     models = {
         'Linear': LinearRegression(),
-        'RandomForest': RandomForestRegressor(n_estimators=100, random_state=42),
-        'XGBoost': XGBRegressor(n_estimators=200, max_depth=4, learning_rate=0.05, random_state=42, verbosity=0)
+        'RandomForest': RandomForestRegressor(n_estimators=50, random_state=42),
+        'XGBoost': XGBRegressor(n_estimators=50, max_depth=3, learning_rate=0.1, random_state=42, verbosity=0)
     }
     results = {}
     for name, model in models.items():
@@ -57,7 +52,7 @@ def train_models(X_train, y_train, X_test, y_test):
         results[name] = {'rmse': rmse, 'r2': r2, 'pipeline': pipe}
     return results
 
-def main():
+def main(out_model_path='models/house_price_pipeline.pkl'):
     os.makedirs('models', exist_ok=True)
     df = create_sample_df()
     X, y = prepare_features(df)
@@ -65,9 +60,8 @@ def main():
     results = train_models(X_train, y_train, X_test, y_test)
     best = min(results.items(), key=lambda kv: kv[1]['rmse'])
     best_name, best_info = best
-    print('Best model:', best_name, 'metrics:', {'rmse': best_info['rmse'], 'r2': best_info['r2']})
-    joblib.dump(best_info['pipeline'], 'models/house_price_pipeline.pkl')
-    print('Saved pipeline to models/house_price_pipeline.pkl')
+    joblib.dump(best_info['pipeline'], out_model_path)
+    return out_model_path
 
-if __name__ == '__main__':
+if __name__=='__main__':
     main()

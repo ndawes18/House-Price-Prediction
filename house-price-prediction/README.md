@@ -1,15 +1,10 @@
 # House Price Prediction
 
-## Overview
-Toy demo that trains regression models on a tiny embedded dataset and saves the best pipeline.
+Toy demo training regression models on a small embedded dataset.
 
-## Files
-- `house_price_pipeline.py`: trains models and saves pipeline to models/
+        ## Data Source
 
-## Run
-```bash
-python house_price_pipeline.py
-```
+- **House Prices — Advanced Regression Techniques (Ames dataset)** — Kaggle: https://www.kaggle.com/c/house-prices-advanced-regression-techniques/data
 
-## Dependencies
-pandas, scikit-learn, xgboost, joblib
+**Notes:** Replace the sample data with `train.csv` from the competition (or the full Ames dataset) in `data/raw/` for real experiments.
+
